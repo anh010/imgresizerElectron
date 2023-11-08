@@ -20,19 +20,44 @@ function createMainWindow(){
     // load index 
     mainWindow.loadFile(path.join(__dirname,"./renderer/index.html"));
 }
+// create about window
 
+function createAboutWindow(){
+    const aboutWindow = new BrowserWindow({
+        title:"About Image Sizer",
+        width: 300,
+        height:300
+    });
+
+    // load file
+    aboutWindow.loadFile(path.join(__dirname,"./renderer/about.html"))
+}
 // menu template
-
-const menu = [{
-    label:'File',
-    submenu:[
+const menu = [
+    // macos config for menu
+    ...(isMac ? [
         {
-            label: 'Quit',
-            click:()=> app.quit(),
-            accelerator: 'CmdOrCtrl+W'
-        }
-    ]
-}];
+            label: app.name,
+            submenu: [
+                {
+                    label: 'About',
+                    click: createAboutWindow,
+                }
+            ]
+        }]: []),
+    {
+        role: 'filemenu',
+
+    },
+    // windows config
+    ...(!isMac? [{
+        label: 'Help',
+        submenu:[{
+            label:'About',
+            click: createAboutWindow,
+        }]
+    }]:[])
+];
 
 // app ready 
 app.whenReady().then(()=>{
